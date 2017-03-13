@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
     src/imageviewer.cpp \
-    src/imagemanager.cpp
+    src/imagemanager.cpp \
+    src/config.cpp
 
 HEADERS  += src/mainwindow.h \
     src/imageviewer.h \
-    src/imagemanager.h
+    src/imagemanager.h \
+    src/config.h
 
 FORMS    += src/mainwindow.ui
 

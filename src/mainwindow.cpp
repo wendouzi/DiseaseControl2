@@ -8,15 +8,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 
-//    mdiArea = new QMdiArea;
-//    setCentralWidget(mdiArea);
+ //   mdiArea = new QMdiArea();
 
-//    createActions();
-//    createMenus();
+    viewer = new ImageManager(this);
+    setCentralWidget(viewer);
 
-//    createToolBars();
-//    createContentMenu();
-//    createStatusBar();
+    createActions();
+    createMenus();
+
+    createToolBars();
+    createContentMenu();
+    createStatusBar();
 
     setWindowTitle(tr("MDI Editor"));
     ui->setupUi(this);
@@ -26,7 +28,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete fileToolBar;
-    delete mdiArea;
+//    delete mdiArea;
     delete readyLabel;
     delete openAction;
     delete newAction;
