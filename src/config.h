@@ -3,6 +3,7 @@
 
 class QPointF;
 class QString;
+class QSize;
 class Config
 {
 public:
@@ -10,6 +11,7 @@ public:
     ~Config();
     const static QPointF OriginPoint;
     const static QString DefaultBgColor;
+    const static QSize WindowFitSize;
 };
 
 #endif // CONFIG_H

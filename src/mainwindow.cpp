@@ -1,32 +1,36 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "QToolBar"
 #include "QLabel"
 #include "QStatusBar"
+#include "config.h"
+#include <QtGui>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtWidgets>
+#endif // QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent)
 {
-
- //   mdiArea = new QMdiArea();
-
     viewer = new ImageManager(this);
     setCentralWidget(viewer);
-
+    viewer->installEventFilter(this);
     createActions();
     createMenus();
 
-    createToolBars();
-    createContentMenu();
-    createStatusBar();
-
-    setWindowTitle(tr("MDI Editor"));
-    ui->setupUi(this);
+//    createToolBars();
+//    createContentMenu();
+//    createStatusBar();
+    resize(Config::WindowFitSize);
+    QRect rect = QApplication::desktop()->availableGeometry();
+    QPoint pos = QPoint((rect.width() - Config::WindowFitSize.width())/2 + rect.left(),
+                        (rect.height() - Config::WindowFitSize.height())/2 + rect.top());
+    move(pos);
+    setWindowTitle(tr("CDC"));
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
     delete fileToolBar;
 //    delete mdiArea;
     delete readyLabel;
@@ -64,7 +68,7 @@ void MainWindow::createActions()
 
 void MainWindow::createMenus()
 {
-    fileMenu = menuBar()->addMenu(tr("&FFile"));
+    fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(newAction);
     fileMenu->addAction(openAction);
     fileMenu->addAction(saveAction);
@@ -95,4 +99,36 @@ void MainWindow::createContentMenu() {
     addAction(saveAsAction);
     //设置如何显示上下文菜单
     this->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event){
+
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+    return false;
+}
+
+void MainWindow::openFile(){
+
+}
+
+void MainWindow::changeFullScreen(){
+
+}
+
+void MainWindow::showAttribute(){
+
+}
+
+void MainWindow::switchSlideShow(){
+
+}
+
+void MainWindow::setting(){
+
+}
+
+void MainWindow::about(){
+
 }

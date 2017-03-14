@@ -2,6 +2,8 @@
 #include <QPainter>
 #include "config.h"
 #include <QPaintEvent>
+#include <QDebug>
+#include <iostream>
 ImageViewer::ImageViewer(QWidget *parent) : QWidget(parent)
 ,bgColor(Config::DefaultBgColor)
 {

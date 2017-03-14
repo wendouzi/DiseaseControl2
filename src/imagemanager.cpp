@@ -1,6 +1,6 @@
 #include "imagemanager.h"
 
-ImageManager::ImageManager()
+ImageManager::ImageManager(QWidget *parent): ImageViewer(parent), curImage(NULL)
 {
 
 }

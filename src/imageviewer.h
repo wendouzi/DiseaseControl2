@@ -16,7 +16,8 @@ public:
     bool noPicture() const { return image.isNull();}
 
 protected slots:
-    void paintEvent(QPaintEvent *) override;
+    // override
+    void paintEvent(QPaintEvent *);
 
 private:
     QImage image;

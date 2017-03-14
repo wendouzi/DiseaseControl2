@@ -24,23 +24,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 protected slots:
-//    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *event);
 //    void dragEnterEvent(QDragEnterEvent * event);
 //    void dropEvent(QDropEvent * event);
 //    void keyPressEvent(QKeyEvent *event);
 //    void resizeEvent(QResizeEvent *event);
 
-//    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
 //    void applyConfig();
 //    void imageChanged(const QString &fileName = QString::null);
 //    void showContextMenu(const QPoint &pos);
 
-//    void openFile();
-//    void changeFullScreen();
-//    void showAttribute();
-//    void switchSlideShow();
-//    void setting();
-//    void about();
+    void openFile();
+    void changeFullScreen();
+    void showAttribute();
+    void switchSlideShow();
+    void setting();
+    void about();
 private:
 //    void readSettings();
 //    void writeSettings();
@@ -53,7 +53,6 @@ private:
 
     void registerAllFunction();
 
-    Ui::MainWindow *ui;
     ImageManager *viewer;
     QRect attributeRect;
     QMenu *fileMenu;

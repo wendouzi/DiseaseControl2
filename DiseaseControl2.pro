@@ -8,6 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+
 TARGET = DiseaseControl2
 TEMPLATE = app
 
@@ -16,12 +17,14 @@ SOURCES += src/main.cpp\
         src/mainwindow.cpp \
     src/imageviewer.cpp \
     src/imagemanager.cpp \
-    src/config.cpp
+    src/config.cpp \
+    src/imagewrapper.cpp
 
 HEADERS  += src/mainwindow.h \
     src/imageviewer.h \
     src/imagemanager.h \
-    src/config.h
+    src/config.h \
+    src/imagewrapper.h
 
 FORMS    += src/mainwindow.ui
 
