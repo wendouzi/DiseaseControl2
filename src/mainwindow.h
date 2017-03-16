@@ -31,7 +31,7 @@ protected slots:
 //    void resizeEvent(QResizeEvent *event);
 
     bool eventFilter(QObject *obj, QEvent *event);
-//    void applyConfig();
+    void applyConfig();
 //    void imageChanged(const QString &fileName = QString::null);
 //    void showContextMenu(const QPoint &pos);
 
@@ -42,15 +42,14 @@ protected slots:
     void setting();
     void about();
 private:
-//    void readSettings();
-//    void writeSettings();
+    void readSettings();
+    void writeSettings();
 
     void createActions();
     void createMenus();
     void createToolBars();
     void createStatusBar();
     void createContentMenu();
-
     void registerAllFunction();
 
     ImageManager *viewer;

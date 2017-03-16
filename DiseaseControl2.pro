@@ -18,13 +18,17 @@ SOURCES += src/main.cpp\
     src/imageviewer.cpp \
     src/imagemanager.cpp \
     src/config.cpp \
-    src/imagewrapper.cpp
+    src/imagewrapper.cpp \
+    src/imageheader.cpp \
+    src/imagefactory.cpp
 
 HEADERS  += src/mainwindow.h \
     src/imageviewer.h \
     src/imagemanager.h \
     src/config.h \
-    src/imagewrapper.h
+    src/imagewrapper.h \
+    src/imageheader.h \
+    src/imagefactory.h
 
 FORMS    += src/mainwindow.ui
 
