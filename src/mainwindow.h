@@ -32,7 +32,7 @@ protected slots:
 
     bool eventFilter(QObject *obj, QEvent *event);
     void applyConfig();
-//    void imageChanged(const QString &fileName = QString::null);
+    void imageChanged(const QString &fileName = QString::null);
 //    void showContextMenu(const QPoint &pos);
 
     void openFile();
@@ -55,6 +55,7 @@ private:
     ImageManager *viewer;
     QRect attributeRect;
     QMenu *fileMenu;
+    QMenu * aboutMenu;
     QToolBar *fileToolBar;
     QMdiArea *mdiArea;
     QLabel *readyLabel;
@@ -64,6 +65,7 @@ private:
     QAction *saveAsAction;
     QAction *exitAction;
     QAction *newAction;
+    QAction *aboutAction;
 };
 
 #endif // MAINWINDOW_H

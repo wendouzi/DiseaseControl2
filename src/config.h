@@ -24,6 +24,7 @@ public:
     const static QPointF OriginPoint;
     const static QString DefaultBgColor;
     const static QSize WindowFitSize;
+    const static int CacheNumber;
     static QString supportFormats() { return instance()->mFormats; }
     static Config * instance();
     static QByteArray lastGeometry() { return instance()->mLastGeometry;}
@@ -40,7 +41,7 @@ private:
     static QString ConfigFilePath() ;
 
     static Config* sInstance;
-
+    QStringList mFormatsLst;
     QString mFormats;
     QByteArray mLastGeometry;
 };

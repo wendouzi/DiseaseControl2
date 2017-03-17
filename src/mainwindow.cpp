@@ -3,9 +3,9 @@
 #include "QToolBar"
 #include "QLabel"
 #include "QStatusBar"
-
+#include <QFileInfo>
 #include <QtGui>
-
+#include "global.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QtWidgets>
 #endif // QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     readSettings();
     Config::insertConfigWatcher(this,SLOT(applyConfig()));
     setWindowTitle(tr("CDC"));
+    setWindowIcon(QIcon(":/appIcon"));
 }
 
 MainWindow::~MainWindow()
@@ -64,6 +65,8 @@ void MainWindow::createActions()
     saveAsAction = new QAction(tr("Save &As..."), this);
     saveAsAction->setStatusTip(tr("Save the file under a new name"));
 
+    aboutAction = new QAction(tr("&About"),this);
+
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("Exit the application"));
@@ -79,6 +82,10 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
+
+    aboutMenu = menuBar()->addMenu(tr("&About"));
+    aboutMenu->addAction(aboutAction);
+    connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
 }
 
 void MainWindow::createToolBars()
@@ -118,12 +125,31 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     return false;
 }
 
+void MainWindow::imageChanged(const QString &fileName){
+    bool hasFile = !fileName.isEmpty();
+    bool hasPicture = viewer->hasPicture();
+
+    setWindowTitle(hasFile
+                   ? QString("%1 - %2").arg(fileName).arg(Global::ProjectName())
+                   : Global::ProjectName());
+}
+
 void MainWindow::openFile(){
-    QString defaultDir = NULL;
+    QString currentFile(viewer->filePath());
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    const QString systemPicturesPath = QDesktopServices::storageLocation(QDesktopServices::PicturesLocation);
+#else
+    const QStringList systemPaths = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    const QString systemPicturesPath = systemPaths.empty() ? QString::null : systemPaths.first();
+#endif // QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    QString defaultDir = (currentFile.isEmpty() ? systemPicturesPath
+                                                : QFileInfo(currentFile).absoluteFilePath());
     QString fileName =
             QFileDialog::getOpenFileName(
                 this, tr("Open File"), defaultDir,
                 tr("Images (%1);;All Files (*)").arg(Config::supportFormats()));
+    if(!fileName.isEmpty())
+        viewer->openFile(fileName);
 }
 
 void MainWindow::applyConfig() {
@@ -160,5 +186,6 @@ void MainWindow::setting(){
 }
 
 void MainWindow::about(){
-
+    QMessageBox::about(this,tr("About %1").arg(Global::ProjectName()),
+                       Global::AboutInfo());
 }
