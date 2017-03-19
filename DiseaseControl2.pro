@@ -21,7 +21,9 @@ SOURCES += src/main.cpp\
     src/imagewrapper.cpp \
     src/imageheader.cpp \
     src/imagefactory.cpp \
-    src/toolkit.cpp
+    src/toolkit.cpp \
+    src/velocitytracker.cpp \
+    src/tooltip.cpp
 
 HEADERS  += src/mainwindow.h \
     src/imageviewer.h \
@@ -31,7 +33,9 @@ HEADERS  += src/mainwindow.h \
     src/imageheader.h \
     src/imagefactory.h \
     src/toolkit.h \
-    src/global.h
+    src/global.h \
+    src/velocitytracker.h \
+    src/tooltip.h
 
 FORMS    += src/mainwindow.ui
 

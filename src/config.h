@@ -4,6 +4,8 @@
 #include <QVariant>
 #include <QObject>
 #include <QSettings>
+#include <QDir>
+
 class QPointF;
 class QSize;
 class Config:public QObject
@@ -19,11 +21,63 @@ private:
     };
     static Garbage garbage;
 public:
+    enum ScaleMode {
+        ScaleModeBegin = 0,
+
+        ScaleLargeImageToFitWidget = 0,
+        KeepImageSize,
+        FitWidgetWidth,
+        FitWidgetHeight,
+        ScaleToFitWidget,
+        ScaleToExpandWidget,
+
+        ScaleModeEnd = ScaleToExpandWidget
+    };
+
+    enum AlignMode {
+        AlignModeBegin = 0,
+
+        AlignLeftTop = 0,
+        AlignCenterTop,
+        AlignRightTop,
+        AlignLeftCenter,
+        AlignCenterCenter,
+        AlignRightCenter,
+        AlignLeftBottom,
+        AlignCenterBottom,
+        AlignRightBottom,
+
+        AlignModeEnd = AlignRightBottom
+    };
+
+    enum AntialiasMode {
+        AntialiasModeBegin = 0,
+
+        AntialiasWhenZoomIn = 0,
+        AlwaysAntialias,
+        NoAntialias,
+
+        AntialiasModeEnd = NoAntialias
+    };
+    const static int   ClickInterval;
+    const static int   ClickThreshold;
+    const static int   AutoScrollInterval;
+    const static int   FileSizePrecision;
+    const static qreal ScaleMinLimit;
+    const static qreal ScaleMaxLimit;
+    const static QDir::SortFlags DefaultDirSortFlag;
+
+    const static ScaleMode DefaultScaleMode = ScaleLargeImageToFitWidget;
+    const static AlignMode DefaultAlignMode = AlignCenterCenter;
+    const static AntialiasMode DefaultAntialiasMode = AntialiasWhenZoomIn;
+
     Config(const Config &);
     Config & operator = (const Config &);
     const static QPointF OriginPoint;
+    const static QSize SizeAdjusted;
     const static QString DefaultBgColor;
     const static QSize WindowFitSize;
+    const static QSize WindowMinSize;
     const static int CacheNumber;
     static QString supportFormats() { return instance()->mFormats; }
     static Config * instance();

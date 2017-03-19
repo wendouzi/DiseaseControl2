@@ -122,6 +122,34 @@ void MainWindow::closeEvent(QCloseEvent *event){
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+    switch(event->type()){
+    case QEvent::ToolTip:{
+    }
+    case QEvent::MouseButtonDblClick:{
+    }
+    case QEvent::ContextMenu:{
+
+    }
+    case QEvent::Wheel:{
+        QWheelEvent* e = static_cast<QWheelEvent *>(event);
+        qreal factor = 0.1;
+        switch(e->modifiers()){
+        case Qt::ShiftModifier:
+            factor = e->delta()/qreal(2400);
+            break;
+        case Qt::ControlModifier:
+            factor = e->delta() / qreal(600);
+            break;
+        default:
+            factor = e->delta() / qreal(1200);
+            break;
+        }
+        viewer->zoomIn(factor, viewer->mapFromGlobal(e->globalPos()));
+        break;
+    }
+    default:
+        break;
+    }
     return false;
 }
 
