@@ -16,6 +16,8 @@ inline QString fileName(const QString & filepath){
     return QFileInfo(filepath).fileName();
 }
 uint getFilesHash(const QString &filePath);
+
+QStringList getFilesExist(const QStringList &list);
 }
 
 #endif // TOOLKIT_H

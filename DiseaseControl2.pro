@@ -23,7 +23,8 @@ SOURCES += src/main.cpp\
     src/imagefactory.cpp \
     src/toolkit.cpp \
     src/velocitytracker.cpp \
-    src/tooltip.cpp
+    src/tooltip.cpp \
+    src/filesviewer.cpp
 
 HEADERS  += src/mainwindow.h \
     src/imageviewer.h \
@@ -35,7 +36,8 @@ HEADERS  += src/mainwindow.h \
     src/toolkit.h \
     src/global.h \
     src/velocitytracker.h \
-    src/tooltip.h
+    src/tooltip.h \
+    src/filesviewer.h
 
 FORMS    += src/mainwindow.ui
 

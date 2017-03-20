@@ -67,6 +67,8 @@ public:
     const static qreal ScaleMaxLimit;
     const static QDir::SortFlags DefaultDirSortFlag;
 
+    const static QRect AutoFilesViewGeometry;
+
     const static ScaleMode DefaultScaleMode = ScaleLargeImageToFitWidget;
     const static AlignMode DefaultAlignMode = AlignCenterCenter;
     const static AntialiasMode DefaultAntialiasMode = AntialiasWhenZoomIn;

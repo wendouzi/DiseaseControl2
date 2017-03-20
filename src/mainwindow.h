@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "imagemanager.h"
 #include "QWidget"
+#include "filesviewer.h"
+#include <QtGui>
+#include <QVBoxLayout>
 class QLabel;
 class QMenu;
 class QAction;
@@ -12,9 +15,6 @@ class QMdiArea;
 class ImageManager;
 class QToolBar;
 
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
@@ -25,8 +25,8 @@ public:
     ~MainWindow();
 protected slots:
     void closeEvent(QCloseEvent *event);
-//    void dragEnterEvent(QDragEnterEvent * event);
-//    void dropEvent(QDropEvent * event);
+    void dragEnterEvent(QDragEnterEvent * event);
+    void dropEvent(QDropEvent * event);
 //    void keyPressEvent(QKeyEvent *event);
 //    void resizeEvent(QResizeEvent *event);
 
@@ -44,7 +44,7 @@ protected slots:
 private:
     void readSettings();
     void writeSettings();
-
+    bool maybeSave();
     void createActions();
     void createMenus();
     void createToolBars();
@@ -53,6 +53,9 @@ private:
     void registerAllFunction();
 
     ImageManager *viewer;
+    FilesViewer * filesviewer;
+    QVBoxLayout * centerLayout;
+    QVBoxLayout * filesviewLayout;
     QRect attributeRect;
     QMenu *fileMenu;
     QMenu * aboutMenu;

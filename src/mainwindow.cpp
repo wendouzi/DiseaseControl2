@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QtGui>
 #include "global.h"
+#include "toolkit.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QtWidgets>
 #endif // QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -14,14 +15,33 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     viewer = new ImageManager(this);
-    setCentralWidget(viewer);
     viewer->installEventFilter(this);
+    centerLayout = new QVBoxLayout(viewer);
+#ifndef Q_OS_MAC
+    centerLayout->setSpacing(6);
+#endif
+#ifndef Q_OS_MAC
+    centerLayout->setContentsMargins(9, 9, 9, 9);
+#endif
+    centerLayout->setObjectName(QStringLiteral("centerLayout"));
+    setCentralWidget(viewer);
+
     createActions();
     createMenus();
 
-//    createToolBars();
-//    createContentMenu();
-//    createStatusBar();
+    filesviewer = new FilesViewer(this);
+    filesviewer->setObjectName(QStringLiteral("Files View"));
+    filesviewer->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable);
+ //   filesviewer->setGeometry(Config::AutoFilesViewGeometry);
+    this->addDockWidget(static_cast<Qt::DockWidgetArea>(1),filesviewer);
+
+    //  filesviewer->setWidget(viewer);
+    //  setCentralWidget(filesviewer);
+
+
+    //    createToolBars();
+    //    createContentMenu();
+    //    createStatusBar();
     resize(Config::WindowFitSize);
     QRect rect = QApplication::desktop()->availableGeometry();
     QPoint pos = QPoint((rect.width() - Config::WindowFitSize.width())/2 + rect.left(),
@@ -31,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Config::insertConfigWatcher(this,SLOT(applyConfig()));
     setWindowTitle(tr("CDC"));
     setWindowIcon(QIcon(":/appIcon"));
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow()
@@ -82,7 +103,7 @@ void MainWindow::createMenus()
     fileMenu->addAction(saveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
-
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
     aboutMenu = menuBar()->addMenu(tr("&About"));
     aboutMenu->addAction(aboutAction);
     connect(aboutAction, SIGNAL(triggered()), SLOT(about()));
@@ -118,12 +139,58 @@ void MainWindow::closeEvent(QCloseEvent *event){
         qDebug("MainWindow::closeEvent(): !isFullScreenn");
         writeSettings();
     }
-    event->accept();
+    switch( QMessageBox::information( this, tr("DCD"),
+                                      tr("Do you really want to log out DCD?"),
+                                      tr("Yes"), tr("No"),
+                                      0, 1 ) )
+    {
+    case 0:
+        event->accept();
+        break;
+    case 1:
+    default:
+        event->ignore();
+        break;
+    }
+
 }
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event){
+    const QMimeData *mimeData = event->mimeData();
+    if (event->mimeData()->hasUrls()){
+        QList<QUrl> urlList(mimeData->urls());
+        QFileInfo fileInfo;
+        for (int i = 0; i < urlList.size(); ++i) {
+            fileInfo.setFile(urlList.at(i).toLocalFile());
+            if(fileInfo.isFile()){
+//                    && FORMAT_LIST.contains(fileInfo.suffix().toLower())){
+                event->acceptProposedAction();
+                break;
+            }
+        }
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent * event){
+    const QMimeData *mimeData = event->mimeData();
+    if (mimeData->hasUrls()) {
+        QList<QUrl> urlList(mimeData->urls());
+        QStringList fileList;
+        for(int size = urlList.size(), i=0; i < size; ++i)
+            fileList.append(urlList.at(i).toLocalFile());
+        fileList = ToolKit::getFilesExist(fileList);   ///
+        if(!fileList.empty())
+            viewer->openFiles(fileList);
+    }
+
+    event->acceptProposedAction();
+}
+
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event){
     switch(event->type()){
     case QEvent::ToolTip:{
+
     }
     case QEvent::MouseButtonDblClick:{
     }
@@ -216,4 +283,20 @@ void MainWindow::setting(){
 void MainWindow::about(){
     QMessageBox::about(this,tr("About %1").arg(Global::ProjectName()),
                        Global::AboutInfo());
+}
+
+bool MainWindow::maybeSave(){
+    if (true) {
+        QMessageBox::StandardButton ret;
+        ret = QMessageBox::warning(this, tr("Application"),
+                     tr("The document has been modified.\n"
+                        "Do you want to save your changes?"),
+                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        if (ret == QMessageBox::Save)
+         //   return save();
+            return true;
+        else if (ret == QMessageBox::Cancel)
+            return false;
+    }
+    return true;
 }

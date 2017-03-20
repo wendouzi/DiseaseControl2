@@ -27,6 +27,8 @@ const int  DefaultTimerInterval = 4;
 const int  TimerIntervalMinLimit = 1;
 const int  TimerIntervalMaxLimit = 1000;
 
+const  QRect Config::AutoFilesViewGeometry(0,25,274,298);
+
 const int Config::CacheNumber = 10;
 const QString Config::DefaultBgColor = "#C7EDCC";
 const QDir::SortFlags Config::DefaultDirSortFlag = QDir::LocaleAware;//QDir::Name | QDir::IgnoreCase;
