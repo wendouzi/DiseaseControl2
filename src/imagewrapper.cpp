@@ -15,7 +15,6 @@ ImageWrapper::~ImageWrapper(){
 void ImageWrapper::load(const QString& filePath, bool preReading){
     if(filePath.isEmpty())
         return;
-    imagePath = filePath;
     attributes = QString::null;
     formatFlag = REGULAR_FLAG;
     QImageReader reader(imagePath);
@@ -57,4 +56,10 @@ QString ImageWrapper::attibute(){
 
 QImage ImageWrapper::currentImage(){
     return image;
+}
+
+void ImageWrapper::readHeader(const QString& filePath){
+    if(filePath.isEmpty())
+        return;
+    imagePath = filePath;
 }

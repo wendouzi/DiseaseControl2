@@ -37,9 +37,12 @@ FilesViewer::~FilesViewer(){
 }
 
 void FilesViewer::update(){
+    tree->clear();
     QList<ImageWrapper*> list = IMAGEFACTORY->files();
     qDebug("list size:%d",list.size());
     foreach(ImageWrapper* image, list){
+        if(!image)
+            continue;
         QTreeWidgetItem *familyItem = new QTreeWidgetItem(tree);
         QString name = ToolKit::fileName(image->getImagePath());
         familyItem->setText(0, name);

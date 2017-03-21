@@ -30,6 +30,7 @@ public:
     virtual QImage currentImage();
     virtual QString attibute();
     virtual QString getImagePath(){return imagePath;}
+    virtual void readHeader(const QString& filePath);
 private:
     enum {
         REGULAR_FLAG = 0x0,

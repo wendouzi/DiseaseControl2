@@ -34,8 +34,8 @@ ImageWrapper* ImageFactory::getImageWrapper(const QString&filePath){
         return image;
     image = newOrReuseImage();
     image->setHashCode(hash);
+    image->readHeader(filePath);
     list.prepend(image);
-    qDebug("list size:%d",list.size());
     emit filesChanged();
     if(hash == ImageWrapper::HASH_INVALID)
         image->setReady(true);
