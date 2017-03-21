@@ -4,16 +4,22 @@
 #include <QDockWidget>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-class FilesViewer : public QDockWidget
+#include <QObject>
+class FilesViewer :public QDockWidget
 {
+    Q_OBJECT
 public:
     FilesViewer(QWidget *parent = 0,Qt::WindowFlags flags = 0);
+    ~FilesViewer();
     void initFeatures();
-    QTreeWidget * Tree(){return filesTree;}
+    void update();
+    QTreeWidget * Tree(){return tree;}
+public slots:
+    void filesChanged();
 private:
-    QTreeWidget *filesTree;
-    QVBoxLayout *vboxLayout1;
-    QWidget *dockWidgetContents;
+    QTreeWidget *tree;
+    QVBoxLayout *vboxLayout;
+    QWidget * Content;
 };
 
 #endif // FILESVIEWER_H

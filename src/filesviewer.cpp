@@ -1,44 +1,69 @@
 #include "filesviewer.h"
 #include <QTreeWidgetItem>
 #include <QFontDatabase>
+#include "langconfig.h"
+#include "imagefactory.h"
+#include "toolkit.h"
 FilesViewer::FilesViewer(QWidget *parent, Qt::WindowFlags flags):
     QDockWidget(parent,flags)
 {
-    dockWidgetContents = new QWidget();
-    dockWidgetContents->setObjectName(QStringLiteral("dockWidgetContents"));
-    vboxLayout1 = new QVBoxLayout(dockWidgetContents);
+    Content = new QWidget();
+    Content->setObjectName(QStringLiteral("FilesViewerContent"));
+    vboxLayout = new QVBoxLayout(Content);
 #ifndef Q_OS_MAC
-    vboxLayout1->setSpacing(6);
+    vboxLayout->setSpacing(6);
 #endif
 #ifndef Q_OS_MAC
-    vboxLayout1->setContentsMargins(9, 9, 9, 9);
+    vboxLayout->setContentsMargins(9, 9, 9, 9);
 #endif
-    vboxLayout1->setObjectName(QStringLiteral("vboxLayout1"));
-    filesTree = new QTreeWidget(dockWidgetContents);
+    vboxLayout->setObjectName(QStringLiteral("FilesViewervboxLayout"));
+    tree = new QTreeWidget(Content);
     QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-    __qtreewidgetitem->setText(0, QStringLiteral("1"));
-    filesTree->setHeaderItem(__qtreewidgetitem);
-    filesTree->setObjectName(QStringLiteral("fontTree"));
-    filesTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    __qtreewidgetitem->setText(0, LangConfig::FilesViewerTitle);
+    tree->setHeaderItem(__qtreewidgetitem);
+    tree->setObjectName(QStringLiteral("FilesViewervTree"));
+    tree->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-    vboxLayout1->addWidget(filesTree);
+    vboxLayout->addWidget(tree);
 
-    setWidget(dockWidgetContents);
-
-   // initFeatures();
+    setWidget(Content);
+    if(connect(IMAGEFACTORY,SIGNAL(filesChanged()),SLOT(filesChanged())))
+        qDebug("FilesViewer connect error");
+    //  initFeatures();
 }
+
+FilesViewer::~FilesViewer(){
+    disconnect(IMAGEFACTORY,SIGNAL(filesChanged()),this,SLOT(filesChanged()));
+}
+
+void FilesViewer::update(){
+    QList<ImageWrapper*> list = IMAGEFACTORY->files();
+    qDebug("list size:%d",list.size());
+    foreach(ImageWrapper* image, list){
+        QTreeWidgetItem *familyItem = new QTreeWidgetItem(tree);
+        QString name = ToolKit::fileName(image->getImagePath());
+        familyItem->setText(0, name);
+        qDebug("imagepath:%s",qPrintable(name));
+        familyItem->setCheckState(0, Qt::Unchecked);
+    }
+}
+
+void FilesViewer::filesChanged(){
+    update();
+}
+
 
 void FilesViewer::initFeatures(){
     QFontDatabase database;
-    filesTree->setColumnCount(1);
-    filesTree->setHeaderLabels(QStringList() << tr("Font"));
+    tree->setColumnCount(1);
+    tree->setHeaderLabels(QStringList() << tr("Font"));
 
     foreach (QString family, database.families()) {
         const QStringList styles = database.styles(family);
         if (styles.isEmpty())
             continue;
 
-        QTreeWidgetItem *familyItem = new QTreeWidgetItem(filesTree);
+        QTreeWidgetItem *familyItem = new QTreeWidgetItem(tree);
         familyItem->setText(0, family);
         familyItem->setCheckState(0, Qt::Unchecked);
 

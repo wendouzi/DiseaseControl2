@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QDir>
-
+#include <QMutex>
 class QPointF;
 class QSize;
 class Config:public QObject
@@ -103,8 +103,14 @@ private:
 };
 
 inline Config * Config::instance() {
-    if(!sInstance)
-        sInstance = new Config();
+    if(!sInstance){
+        QMutex mutex;
+        mutex.lock();
+        if(!sInstance){
+            sInstance = new Config();
+        }
+        mutex.unlock();
+    }
     return sInstance;
 }
 

@@ -29,7 +29,7 @@ public:
     virtual void load(const QString& filePath, bool preReading);
     virtual QImage currentImage();
     virtual QString attibute();
-
+    virtual QString getImagePath(){return imagePath;}
 private:
     enum {
         REGULAR_FLAG = 0x0,

@@ -5,7 +5,8 @@
 #include "imagewrapper.h"
 #include "toolkit.h"
 #include "config.h"
-QList<ImageWrapper*> ImageFactory::list;
+
+ImageFactory* ImageFactory::sInstance = NULL;
 
 class Runnable : public QRunnable
 {
@@ -22,6 +23,10 @@ private:
     bool isPreReading;
 };
 
+ImageFactory::ImageFactory():QObject(),curIndex(-1){
+
+}
+
 ImageWrapper* ImageFactory::getImageWrapper(const QString&filePath){
     ImageWrapper *image;
     uint hash = filePath.isEmpty() ? ImageWrapper::HASH_INVALID : ToolKit::getFilesHash(filePath);
@@ -30,6 +35,8 @@ ImageWrapper* ImageFactory::getImageWrapper(const QString&filePath){
     image = newOrReuseImage();
     image->setHashCode(hash);
     list.prepend(image);
+    qDebug("list size:%d",list.size());
+    emit filesChanged();
     if(hash == ImageWrapper::HASH_INVALID)
         image->setReady(true);
     else

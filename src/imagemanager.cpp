@@ -13,7 +13,7 @@ ImageManager::ImageManager(QWidget *parent): ImageViewer(parent), curImage(NULL)
 
 ImageManager::~ImageManager()
 {
-    ImageFactory::freeAllCache();
+    IMAGEFACTORY->freeAllCache();
     disconnect(&fsWatcher,SIGNAL(fileChanged(QString)),this,SLOT(fileChanged(QString)));
     disconnect(&fsWatcher,SIGNAL(directoryChanged(QString)),this,SLOT(directoryChanged(QString)));
 }
@@ -32,7 +32,7 @@ void ImageManager::openFile(const QString & filePath){
         return;
     curPath = fileInfo.absoluteFilePath();
     curName = fileInfo.fileName();
-    curImage = ImageFactory::getImageWrapper(filePath);
+    curImage = IMAGEFACTORY->getImageWrapper(filePath);
     while(!curImage->getReady())
         qApp->processEvents(QEventLoop::AllEvents);
     QImage image = curImage->currentImage();

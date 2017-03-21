@@ -1,18 +1,42 @@
 #ifndef IMAGEFACTORY_H
 #define IMAGEFACTORY_H
 #include <QList>
-class ImageWrapper;
-class ImageFactory
+#include <QString>
+#include "imagewrapper.h"
+#include <QMutex>
+#include <QObject>
+#define IMAGEFACTORY ImageFactory::instance()
+
+class ImageFactory: public QObject
 {
+    Q_OBJECT
 public:
-    static ImageWrapper* getImageWrapper(const QString&filePath);
-    static void freeAllCache();
-    static ImageWrapper* findImageByHash(const uint hash);
-    static ImageWrapper* newOrReuseImage();
-    static void waitForImageReady(ImageWrapper*image);
+    ImageWrapper* getImageWrapper(const QString&filePath);
+    void freeAllCache();
+    ImageWrapper* findImageByHash(const uint hash);
+    ImageWrapper* newOrReuseImage();
+    void waitForImageReady(ImageWrapper*image);
+    QList<ImageWrapper*> files(){return list;}
+    static ImageFactory* instance(){
+        QMutex mutex;
+        if(!sInstance){
+            mutex.lock();
+            if(!sInstance){
+                sInstance = new ImageFactory;
+            }
+            mutex.unlock();
+        }
+        return sInstance;
+    }
+
+signals:
+    void filesChanged();
 private:
-    static QList<ImageWrapper*> list;
-    static void freeImage(ImageWrapper*image);
+    ImageFactory();
+    int curIndex;
+    QList<ImageWrapper*> list;
+    void freeImage(ImageWrapper*image);
+    static ImageFactory * sInstance;
 };
 
 #endif // IMAGEFACTORY_H
