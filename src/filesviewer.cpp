@@ -27,24 +27,31 @@ FilesViewer::FilesViewer(QWidget *parent, Qt::WindowFlags flags):
     vboxLayout->addWidget(tree);
 
     setWidget(Content);
-    if(connect(IMAGEFACTORY,SIGNAL(filesChanged()),SLOT(filesChanged())))
-        qDebug("FilesViewer connect error");
+    if(!connect(IMAGEFACTORY,SIGNAL(filesChanged()),SLOT(filesChanged())))
+        qDebug("FilesViewer filesChanged connect error");
+    if(!connect(tree, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
+            this, SLOT(doubleClicked(QTreeWidgetItem*, int))))
+        qDebug("FilesViewer itemDoubleClicked connect error");;
+    if(!connect(tree, SIGNAL(itemSelectionChanged()),
+            this, SLOT(selectionChanged())))
+        qDebug("FilesViewer itemSelectionChanged connect error");
+
     //  initFeatures();
 }
 
 FilesViewer::~FilesViewer(){
     disconnect(IMAGEFACTORY,SIGNAL(filesChanged()),this,SLOT(filesChanged()));
+    disconnect(tree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)),
+            this, SLOT(doubleClicked(QTreeWidgetItem*, int)));
+    disconnect(tree, SIGNAL(itemSelectionChanged()),this, SLOT(selectionChanged()));
 }
 
 void FilesViewer::update(){
     tree->clear();
-    QList<ImageWrapper*> list = IMAGEFACTORY->files();
-    qDebug("list size:%d",list.size());
-    foreach(ImageWrapper* image, list){
-        if(!image)
-            continue;
+    qDebug("list size:%d",fvlist.list.size());
+    for(int s = fvlist.list.size(), idx = 0; idx < s; ++idx){
         QTreeWidgetItem *familyItem = new QTreeWidgetItem(tree);
-        QString name = ToolKit::fileName(image->getImagePath());
+        QString name = ToolKit::fileName(fvlist.list[idx].getName());
         familyItem->setText(0, name);
         qDebug("imagepath:%s",qPrintable(name));
         familyItem->setCheckState(0, Qt::Unchecked);
@@ -52,6 +59,7 @@ void FilesViewer::update(){
 }
 
 void FilesViewer::filesChanged(){
+    fvlist.setImageList(IMAGEFACTORY->files());
     update();
 }
 
@@ -78,4 +86,14 @@ void FilesViewer::initFeatures(){
             styleItem->setData(0, Qt::UserRole + 1, QVariant(database.italic(family, style)));
         }
     }
+}
+void FilesViewer::doubleClicked(QTreeWidgetItem *item, int column){
+    uint hash = fvlist.getHashByName(item->text(0));
+    qDebug("item double clicked:%s,hash:%u",qPrintable(item->text(0)),hash);
+    emit showImage(hash);
+}
+
+void FilesViewer::selectionChanged(){
+    QTreeWidgetItem *item = tree->currentItem();
+    qDebug("item selectionChanged:%s",qPrintable(item->text(0)));
 }

@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     filesviewer = new FilesViewer(this);
     filesviewer->setObjectName(QStringLiteral("Files View"));
     filesviewer->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable);
+    if(!connect(filesviewer,SIGNAL(showImage(uint)),viewer,SLOT(showImage(uint))))
+        qDebug("filesviewer and viewer connect error");
  //   filesviewer->setGeometry(Config::AutoFilesViewGeometry);
     this->addDockWidget(static_cast<Qt::DockWidgetArea>(1),filesviewer);
 
@@ -56,14 +58,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    disconnect(filesviewer,SIGNAL(showImage(uint)),viewer,SLOT(showImage(uint)));
     delete fileToolBar;
-//    delete mdiArea;
+    //    delete mdiArea;
     delete readyLabel;
     delete openAction;
     delete newAction;
     delete saveAction;
     delete saveAsAction;
     delete exitAction;
+
 }
 
 void MainWindow::createActions()

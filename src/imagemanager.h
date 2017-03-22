@@ -18,6 +18,7 @@ public:
     ~ImageManager();
 public slots:
     void fileChanged(const QString&);
+    void showImage(const uint hash = ImageWrapper::HASH_INVALID);
     void directoryChanged(const QString &);
 signals:
     void imageChanged(const QString & fileName);

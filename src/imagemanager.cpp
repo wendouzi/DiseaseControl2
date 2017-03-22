@@ -22,6 +22,16 @@ void ImageManager::fileChanged(const QString&){
 
 }
 
+void ImageManager::showImage(const uint hash){
+    if(hash == ImageWrapper::HASH_INVALID) return;
+    if(hash == curImage->getHashCode()) return;
+    curImage = IMAGEFACTORY->findImageByHash(hash);
+    qDebug("ImageManager::showImage(%u)",hash);
+    QImage image = curImage->currentImage();
+    QString errorMsg = image.isNull() ? Global::LoadFileErrorInfo().arg(curPath):QString::null;
+    loadImage(curImage->currentImage(),errorMsg);
+}
+
 void ImageManager::directoryChanged(const QString &){
 
 }
